@@ -24,7 +24,7 @@ Il progetto è stato sviluppato come programma Java stand-alone/desktop.
 * **Utilizzo delle JToolBar:** I pulsanti di azione (sia nella schermata principale che in quella di login ed editor) sono stati raggruppati all'interno di `JToolBar`.
 * **Icone sui Pulsanti:** I bottoni principali hanno delle icone.
 * **Utilizzo di sistema di versioning online** come si vede il progetto è stato caricato su GitHub per renderlo accessibile a tutti in modo pubblico.
-* **Salvataggio dati su DB** I dati vengono salvati sul database sfruttando MySQL.
+* **Salvataggio dati su DB** I dati vengono salvati su database sfruttando MySQL.
 
 ---
 
