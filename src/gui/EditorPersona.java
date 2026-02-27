@@ -121,6 +121,28 @@ public class EditorPersona extends JDialog {
             JOptionPane.showMessageDialog(this, "Inserire un numero valido per l'età.", "Errore", JOptionPane.ERROR_MESSAGE);
             return; // Ferma il salvataggio
         }
+        if (eta < 0) {
+            JOptionPane.showMessageDialog(this, "L'età non può essere minore di 0.", "Errore", JOptionPane.ERROR_MESSAGE);
+            return; // Ferma il salvataggio
+        }
+        // Controllo lunghezze massime consentite dal database
+        if (nome.length() > 50 || cognome.length() > 50) {
+            JOptionPane.showMessageDialog(this, "Nome e Cognome non possono superare i 50 caratteri.", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (indirizzo.length() > 100) {
+            JOptionPane.showMessageDialog(this, "L'indirizzo inserito è troppo lungo (max 100 caratteri).", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (telefono.length() > 20) {
+            JOptionPane.showMessageDialog(this, "Il numero di telefono è troppo lungo (max 20 caratteri).", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // controllo numero telefono
+        if (!telefono.isEmpty() && !telefono.matches("^[0-9+ ]+$")) {
+            JOptionPane.showMessageDialog(this, "Il numero di telefono contiene caratteri non validi.", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         // Controllo campi obbligatori
         if (nome.isEmpty() || cognome.isEmpty()) {
@@ -133,8 +155,7 @@ public class EditorPersona extends JDialog {
         if (personaDaModificare == null) {
             // CREAZIONE NUOVA PERSONA
             Persona nuovaPersona = new Persona(nome, cognome, indirizzo, telefono, eta);
-            if (dao.insertPersona(nuovaPersona)) {
-            } else {
+            if (!dao.insertPersona(nuovaPersona)) {
                 JOptionPane.showMessageDialog(this, "Errore durante il salvataggio.");
             }
         } else {
@@ -145,8 +166,7 @@ public class EditorPersona extends JDialog {
             personaDaModificare.setTelefono(telefono);
             personaDaModificare.setEta(eta);
 
-            if (dao.updatePersona(personaDaModificare)) {
-            } else {
+            if (!dao.updatePersona(personaDaModificare)) {
                 JOptionPane.showMessageDialog(this, "Errore durante la modifica.");
             }
         }

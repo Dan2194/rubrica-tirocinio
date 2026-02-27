@@ -96,6 +96,14 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Inserisci username e password per registrarti.");
             return;
         }
+        if (username.length() > 50) {
+            JOptionPane.showMessageDialog(this, "Lo username è troppo lungo (max 50 caratteri).", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (password.length() > 255) {
+            JOptionPane.showMessageDialog(this, "La password è troppo lunga (max 255 caratteri).", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         Utente nuovoUtente = new Utente(username, password);
         UtenteDAO dao = new UtenteDAO();

@@ -2,31 +2,33 @@ package dao;
 
 import model.Persona;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Vector;
 
 public class PersonaDAO {
 
     public boolean insertPersona(Persona p) {
 
-        // Costruzione della query SQL
-        String query = "INSERT INTO persone (nome, cognome, indirizzo, telefono, eta) VALUES ('"
-                + p.getNome() + "', '"
-                + p.getCognome() + "', '"
-                + p.getIndirizzo() + "', '"
-                + p.getTelefono() + "', "
-                + p.getEta() + ")";
+        // query SQL con parametri
+        String query = "INSERT INTO persone (nome, cognome, indirizzo, telefono, eta) VALUES (?, ?, ?, ?, ?)";
         try {
-            // ottiene la connessione al database
+            // connessione al database
             Connection conn = DatabaseConnection.getConnection();
             if (conn != null) {
-                // inserimento e salvo il numero di righe modificate
-                Statement stmt = conn.createStatement();
-                int rowsAffected = stmt.executeUpdate(query);
-                stmt.close();
-                // Se almeno una riga è stata modificata, l'inserimento ha avuto successo
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, p.getNome());
+                pstmt.setString(2, p.getCognome());
+                pstmt.setString(3, p.getIndirizzo());
+                pstmt.setString(4, p.getTelefono());
+                pstmt.setInt(5, p.getEta());
+
+                // salvo il numero di righe modificate
+                int rowsAffected = pstmt.executeUpdate();
+                pstmt.close();
+
+                // se almeno una riga è stata modificata, l'inserimento ha avuto successo
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
@@ -38,14 +40,17 @@ public class PersonaDAO {
 
     public Vector<Persona> getAllPersone() {
         Vector<Persona> listaPersone = new Vector<>();
-        // Query per selezionare tutte le colonne di tutti i record
+
+        // query per selezionare tutte le colonne di tutti i record
         String query = "SELECT * FROM persone";
         try {
+            // connessione al database
             Connection conn = DatabaseConnection.getConnection();
             if (conn != null) {
-                Statement stmt = conn.createStatement();
-                // restituisce i risultati
-                ResultSet rs = stmt.executeQuery(query);
+                PreparedStatement pstmt = conn.prepareStatement(query);
+
+                // cosi ottengo i risultati
+                ResultSet rs = pstmt.executeQuery();
 
                 // scorro i risultati riga per riga
                 while (rs.next()) {
@@ -61,8 +66,10 @@ public class PersonaDAO {
                     // aggiungo la persona alla lista da restituire
                     listaPersone.add(p);
                 }
+
+                // libero la memoria
                 rs.close();
-                stmt.close();
+                pstmt.close();
             }
         } catch (SQLException e) {
             System.err.println("Errore durante il recupero delle persone.");
@@ -72,20 +79,26 @@ public class PersonaDAO {
     }
 
     public boolean updatePersona(Persona p) {
-        // costruzione query
-        String query = "UPDATE persone SET "
-                + "nome='" + p.getNome() + "', "
-                + "cognome='" + p.getCognome() + "', "
-                + "indirizzo='" + p.getIndirizzo() + "', "
-                + "telefono='" + p.getTelefono() + "', "
-                + "eta=" + p.getEta()
-                + " WHERE id=" + p.getId();
+
+        // query di aggiornamento
+        String query = "UPDATE persone SET nome=?, cognome=?, indirizzo=?, telefono=?, eta=? WHERE id=?";
         try {
+            // connessione al database
             Connection conn = DatabaseConnection.getConnection();
             if (conn != null) {
-                Statement stmt = conn.createStatement();
-                int rowsAffected = stmt.executeUpdate(query);
-                stmt.close();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, p.getNome());
+                pstmt.setString(2, p.getCognome());
+                pstmt.setString(3, p.getIndirizzo());
+                pstmt.setString(4, p.getTelefono());
+                pstmt.setInt(5, p.getEta());
+                pstmt.setInt(6, p.getId());
+
+                // salvo il numero di righe modificate
+                int rowsAffected = pstmt.executeUpdate();
+                pstmt.close();
+
+                // Se almeno una riga è stata modificata, l'aggiornamento ha avuto successo
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
@@ -96,14 +109,21 @@ public class PersonaDAO {
     }
 
     public boolean deletePersona(int id) {
-        // costruzione query
-        String query = "DELETE FROM persone WHERE id=" + id;
+
+        // query di eliminazione
+        String query = "DELETE FROM persone WHERE id=?";
         try {
+            // connessione al database
             Connection conn = DatabaseConnection.getConnection();
             if (conn != null) {
-                Statement stmt = conn.createStatement();
-                int rowsAffected = stmt.executeUpdate(query);
-                stmt.close();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, id);
+
+                // salvo il numero di righe modificate
+                int rowsAffected = pstmt.executeUpdate();
+                pstmt.close();
+
+                // se almeno una riga è stata modificata, l'eliminazione ha avuto successo
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
