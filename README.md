@@ -34,7 +34,6 @@ Il progetto è stato sviluppato come programma Java stand-alone/desktop.
 * **Interpretazione accesso contatti** Ho interpretato il login come un accesso globale. In sostanza ogni utente vede sempre gli stessi contatti.
   Se avessi voluto che ogni utente vedesse solo i propri contatti avrei dovuto:
   * aggiungere una colonna in più allo schema delle persone nel database per sapere a chi appartengono;
-  * aggiungere un ID alle persone;
   * cambiare il login in modo che restituisse l'utente (per ricordare chi ha effettuato il login);
   * la query in cui prendo tutte le persone sarebbe cambiata per prendere solo quelle rispettive a quell'utente;
   * la finestra principale avrebbe dovuto prendere come input l'utente loggato.
